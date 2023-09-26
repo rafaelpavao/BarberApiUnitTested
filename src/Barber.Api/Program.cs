@@ -22,7 +22,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<CustomerContext>( //Para usar o Banco de Dados
     options => {
-        options.UseNpgsql("Host=localhost;Database=BarberShop;Username=postgres;Password=Gui250504");
+        options.UseNpgsql("Host=localhost;Database=BarberShop;Username=postgres;Password=123");
     }
 );
 

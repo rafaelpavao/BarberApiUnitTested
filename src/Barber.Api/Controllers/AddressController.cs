@@ -20,7 +20,7 @@ public class AddressController : MainController{
 
   // Gets:
   [HttpGet("{addressId}", Name = "GetAddressById")]
-  public async Task<ActionResult<AddressToReturnDto>> GetAddressById(int customerId, int addressId){
+  public async Task<ActionResult<GetAddressByIdDetailDto>> GetAddressById(int customerId, int addressId){
     var getAddressByIdDetailQuery = new GetAddressByIdDetailQuery{CustomerId = customerId, AddressId = addressId};
 
     var addressToReturn = await _mediator.Send(getAddressByIdDetailQuery);
