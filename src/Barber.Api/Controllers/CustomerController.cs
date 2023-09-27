@@ -27,7 +27,7 @@ public class CustomerController : MainController{
 
     var customersToReturn = await _mediator.Send(getAllCustomersDetailQuery);
 
-    if(customersToReturn == null) return NotFound();
+    if(!customersToReturn.Any()) return NotFound();
 
     return Ok(customersToReturn);
   }

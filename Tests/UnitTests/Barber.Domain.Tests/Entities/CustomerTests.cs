@@ -3,8 +3,8 @@ using FluentAssertions;
 using Xunit.Abstractions;
 namespace Barber.Domain.Tests.Entities.Entities
 {
-    [Collection(nameof(CustomerCollection))]
-    public class CustomerFluentAssertionsTests
+    
+    public class CustomerFluentAssertionsTests : IClassFixture<CustomerTestsFixture>
     {
         private readonly CustomerTestsFixture _customerTestsFixture;
         readonly ITestOutputHelper _outputHelper;

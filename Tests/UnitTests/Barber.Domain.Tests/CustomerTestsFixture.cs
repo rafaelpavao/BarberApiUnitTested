@@ -6,32 +6,29 @@ using Moq.AutoMock;
 namespace Barber.Domain.Tests
 
 {
-    [CollectionDefinition(nameof(CustomerCollection))]
-    public class CustomerCollection : ICollectionFixture<CustomerTestsFixture>
-    {
-    }
+    
 
-    public class CustomerTestsFixture : IDisposable
+    public class CustomerTestsFixture 
     {
         
         public AutoMocker Mocker;
 
         public Customer GenerateValidCustomer()
         {
-            return GenerateCustomers(1, true).FirstOrDefault();
+            return GenerateCustomers(1).FirstOrDefault();
         }
 
         public IEnumerable<Customer> GetVariatedCustomers()
         {
             var customers = new List<Customer>();
 
-            customers.AddRange(GenerateCustomers(50, true).ToList());
-            customers.AddRange(GenerateCustomers(50, false).ToList());
+            customers.AddRange(GenerateCustomers(50).ToList());
+            customers.AddRange(GenerateCustomers(50).ToList());
 
             return customers;
         }
 
-        public IEnumerable<Customer> GenerateCustomers(int quantidade, bool ativo)
+        public IEnumerable<Customer> GenerateCustomers(int quantidade)
         {
             var genero = new Faker().PickRandom<Name.Gender>();
             var anyValidDate = DateOnly.FromDateTime(new Faker().Date.Past(80, DateTime.Now.AddYears(-18)));
@@ -65,9 +62,6 @@ namespace Barber.Domain.Tests
             return customer;
         }
         
-        public void Dispose()
-        {
-        }
     }
 }
 

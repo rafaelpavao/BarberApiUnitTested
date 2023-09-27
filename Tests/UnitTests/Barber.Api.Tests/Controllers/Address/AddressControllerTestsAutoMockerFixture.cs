@@ -58,7 +58,7 @@ namespace Barber.Api.Tests.Controllers.Address
                     
                 });
         }
-        public CreateAddressCommandDto GenerateInvalidCommand()
+        public CreateAddressCommandDto GenerateValidCommandDto()
         {
             return new Faker<CreateAddressCommandDto>()
                 .CustomInstantiator(a => new CreateAddressCommandDto()
@@ -79,7 +79,7 @@ namespace Barber.Api.Tests.Controllers.Address
             {
                 Errors = new Faker<Dictionary<string, string[]>>().Generate(),
                 IsSuccessful = true,
-                Address = GenerateInvalidCommand()
+                Address = GenerateValidCommandDto()
             });
         }
 
