@@ -15,15 +15,31 @@ public class CustomerRepositoryTests : IClassFixture<CustomerRepositoryTestsFixt
     private readonly CustomerRepositoryTestsFixture _fixture;
     private CustomerRepository _repo;
     private CustomerContext _context;
-    private Mock<IMapper> _mapper;
 
     public CustomerRepositoryTests(CustomerRepositoryTestsFixture fixture)
     {
         _fixture = fixture;
-        _mapper = new Mock<IMapper>();
-        var dbOptions = new DbContextOptionsBuilder<CustomerContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
-        _context = new CustomerContext(dbOptions.Options);
-        _repo = new CustomerRepository(_context, _mapper.Object);
+        _repo = _fixture.GenerateAndSetupCustomerRepository();
+        _context = _fixture.Context;
+    }
+    
+    [Trait("Category", "Customer Repository Tests")]
+    [Fact(DisplayName = "Add Customer Test")]
+    public async void AddCustomer_WhenCustomerIsValid_Should_CreateCustomerInDbAndReturnVoid()
+    {
+        // Arrange
+        var customer = _fixture.GenerateCustomers(1).FirstOrDefault();
+        
+        // Act
+        _repo.AddCustomer(customer);
+        await _repo.SaveChangesAsync();
+        var customerFromDb = _context.Customers.FirstOrDefault();
+
+        //Assert
+        customerFromDb.Should().NotBeNull();
+        customerFromDb.Should().BeOfType<Customer>();
+        Assert.Equal(customer, customerFromDb);
+
     }
 
     [Trait("Category", "Customer Repository Tests")]
@@ -31,19 +47,18 @@ public class CustomerRepositoryTests : IClassFixture<CustomerRepositoryTestsFixt
     public async void GetAllCustomer_WhenCustomersExistInDb_Should_ReturnCollectionOfCustomers()
     {
         // Arrange
-        var customer = _fixture.GenerateCustomers(1).FirstOrDefault();
-        // await _context.Customers.AddRangeAsync(customers);
+        var customer = _fixture.GenerateCustomers(11);
         
         // Act
-        _repo.AddCustomer(customer);
-        var customerFromDb = _context.Customers.ToList();
+        _context.Customers.AddRange(customer);
+        await _repo.SaveChangesAsync();
+        var customerFromDb = await _repo.GetAllCustomers();
 
         //Assert
         customerFromDb.Should().NotBeNull();
         customerFromDb.Should().NotBeEmpty();
-        customerFromDb.Count.Should().BeGreaterThan(0);
-        customerFromDb.Should().BeOfType<IEnumerable<Customer>>();
-        customerFromDb.FirstOrDefault().Equals(customer);
-
+        customerFromDb.Count().Should().BeGreaterThan(10);
+        customerFromDb.Should().BeOfType<List<Customer>>();
+        customerFromDb.Equals(customer);
     }
 }
